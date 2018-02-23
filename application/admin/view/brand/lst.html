@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>brand</title>
+</head>
+<body>
+
+	 <a href="{:url('Brand/add')}">权限添加</a>
+     <table border="1">
+     	<tr>
+     		<th>id</th>
+     		<th>brand_name</th>
+     		<th>brand_url</th>
+               <th>brand_cat_id</th>
+     		<th>操作</th>
+     	</tr>
+     	{volist name="brand" id='vo'}
+     	<tr>
+     		<td>{$vo.id}</td>
+     		<td>{$vo.name}</td>
+     		<td>{$vo.info}</td>
+            <td><img src="{$vo.image}"></td>
+            <td><img src="{$vo.thumb}"></td>
+     		<td><a href="{:url('brand/update')}?id={$vo.id}">修改</a><a href="{:url('brand/del')}?id={$vo.id}">删除</a></td>
+     	</tr>
+     	{/volist}
+     </table>
+</body>
+</html>

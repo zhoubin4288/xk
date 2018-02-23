@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>权限列表页</title>
+</head>
+<body>
+
+	 <a href="{:url('Crushcat/add')}">权限添加</a>
+     <table border="1">
+     	<tr>
+     		<th>id</th>
+     		<th>crushcat_name</th>
+     		<th>crushcat_info</th>
+     		<th>操作</th>
+     	</tr>
+     	{volist name="crushcat" id='vo'}
+     	<tr>
+     		<td>{$vo.id}</td>
+     		<td>{$vo.crushcat_name}</td>
+     		<td>{$vo.crushcat_info}</td>
+     		<td><a href="{:url('Crushcat/update')}?id={$vo.id}">修改</a><a href="{:url('Crushcat/del')}?id={$vo.id}">删除</a></td>
+     	</tr>
+     	{/volist}
+     </table>
+</body>
+</html>

@@ -1,0 +1,149 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>后台管理系统</title>
+<link rel="stylesheet" type="text/css" href="__CSS__/admin/main.css"  />
+<link rel="stylesheet" type="text/css" href="__CSS__/admin/public.css"  />
+<script type="text/javascript" src="__JS__/jquery.js"></script>
+<script type="text/javascript" src="__JS__/winpop.js"></script>
+<script type="text/javascript" src="__JS__/Public.js"></script>
+<script>
+window.onload=function() {
+	//退出登录
+	function quit() {
+		$('body #quit').click(function(event) {
+			event.preventDefault();
+			if (confirm('确定要退出吗？')) {
+				window.top.location.href="{:url('admin/admin/loginout')}";
+			}
+		});
+	}
+	quit();
+	$('#home').click(function() {
+		window.top.location.href='__APP__/Index/main';
+	});
+    $('#main #user_save').click(function() {
+		popload('修改密码',580,230,'__APP__/User/uedit/');
+		addDiv($('#iframe_pop'));
+	});
+	//一键清空缓存
+	$('#main #cache').click(function() {
+		if(confirm('确定要清空所有缓存吗？')) {
+			wintq('正在清除缓存，请稍后...',4,60000,0,'');
+			$.ajax({
+				url:'__APP__/Common/clearcache/',
+				dataType:'JSON',
+				type:'POST',
+				data:'clear=ok',
+				success: function(data) {
+					if (data.s=='ok') {
+						wintq('更新缓存成功！',1,1000,1,'');
+					}else {
+						wintq(data.s,3,1000,1,'');
+					}
+				}
+			});
+		}
+	});
+	//跟单提醒
+	function remind() {
+		popload('新消息提醒',500,300,'__APP__/Public/remind/','z');
+		addDiv($('#iframe_pop'));
+	}	
+	$('#Remindh').click(function() {
+		remind();
+	});
+	//事务提醒
+	function Link() {
+		$.ajax({
+			url:'__APP__/Common/link',
+			dataType:"json",
+			type:'POST',
+			data:'link='+Math.random(),
+			success: function(data){
+				if (data.s > 0) {
+					$('#Remindh').css('background','url(__STATIC__/image/admin/sessi.gif) no-repeat left top');
+					$('#Remindh').text(data.s);
+					$('#Remindh').attr('title','当前有：'+data.s+'个客户需要跟进');
+				}else {
+					$('#Remindh').css('background','url(__STATIC__/image/admin/sess.png) no-repeat left top');
+				}
+			}
+		});
+	}
+	setInterval(Link,90*60);
+	Link();
+}
+
+$(function() {
+	for (i=0; i<$('#left dl').size(); i++) {
+		$dldd=$('#left dl').eq(i);
+		if ($dldd.find('dd').size() < 1) {
+			$dldd.remove();
+		}
+	}
+	$('#ul li .a').click(function() {
+		$('#ul li .a').removeClass('lia');
+		$(this).addClass('lia');
+		$('#ul li dl').stop().slideUp('fast');
+		var $dl = $(this).parents('li').find('dl');
+		$dl.stop().slideToggle('fast');
+		$dl.find('a').click(function() {
+			$('#ul li dl dd a').removeClass('dla');
+			$(this).addClass('dla');
+		});
+	});
+});
+</script>
+
+</head>
+<body>
+<div id="Remindh">0</div>
+<div id="main">
+	<div id="header">
+    	<div id="logo">通用平台管理系统</div>
+        <div id="cache" title="清空缓存"></div>
+        <div id="home" title="首页"></div>
+        <div id="all" title="全局导航"></div>
+        <div id="quit" title="退出登录"></div>
+    </div>
+    <div id="top">
+    	<div class="top_left">
+        	<div id="jnkc"></div><script>setInterval("jnkc.innerHTML=new Date().toLocaleString()+' 星期'+'日一二三四五六'.charAt(new Date().getDay());",1000);</script>
+        	<div class="top_left1">
+            欢迎您：<font>{$finusrOne.username}</font>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            本次是第 <font>{$finusrOne.logins}</font> 次登录&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            登录IP：{$finusrOne.last_login_ip}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            登录位置：<font>Loginarea</font>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <span id="user_save"><img src="__STATIC__/image/admin/user4.png" border="0" height="16" />修改密码</span>&nbsp;&nbsp;&nbsp;&nbsp;
+            <span id="cache"><img src="__STATIC__/image/admin/cache.png" border="0" height="16" />清空缓存</span>&nbsp;&nbsp;&nbsp;&nbsp;
+            <span id="quit"><img src="__STATIC__/image/admin/exit.png" border="0" height="16" />退出登录</span>
+            </div>
+        </div>
+        <div class="top_right">
+        	<a href="javascript:;" onclick="f5();"><img src="__STATIC__/image/admin/arrow_refresh.png" border="0" title="刷新" /></a>
+        </div>
+    </div>
+    <div id="left">
+    	<ul id="ul">
+        	{volist name="module" id="vo"}
+        	<li><a class="a" href="javascript:;" target="c">{$vo.name}</a>
+            	<dl>
+            	{volist name="authcatfilter" id="vo1"}
+            		{if condition="$vo.id eq $vo1.module_id"}
+                	  <dd><a href="{:url($vo1.auth_url)}" target="c">{$vo1.auth_cat_name}</a></dd>
+                    {/if}
+                {/volist}
+                </dl>
+            </li>
+            {/volist}
+        </ul>
+    </div>
+    <div class="left" title="收缩"></div>
+    <div id="right">
+    	<iframe id="ifdd" name="c" height="100%" width="100%" border="0" frameborder="0" src="{:url('admin/index/content')}">浏览器不支持嵌入式框架，或被配置为不显示嵌入式框架。</iframe>
+    </div>
+</div>
+</body>
+</html>

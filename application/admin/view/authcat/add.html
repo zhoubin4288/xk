@@ -1,0 +1,66 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>修改权限</title>
+<link rel="stylesheet" type="text/css" href="__CSS__/admin/content.css"  />
+<link rel="stylesheet" type="text/css" href="__CSS__/admin/public.css"  />
+<script type="text/javascript" src="__JS__/jquery.js"></script>
+<script type="text/javascript" src="__JS__/Public.js"></script>
+<script type="text/javascript" src="__JS__/winpop.js"></script>
+<script type="text/javascript" src="__JS__/check.js"></script>
+<script>
+$(document).ready(function() {
+	$('.button').click(function() {
+
+		var auth_cat_name=$('#dl dd .qtext').val();
+		var module_id=$('#dl dd .select').val();
+
+        if (!tcheck(module_id,'','模块分类获取失败')) { return false; }
+		if (!tcheck(module_id,'number','模块分类获取失败')) { return false; }
+		if (!tcheck(auth_cat_name,'','请填写权限名称')) { return false; }
+		if (!tcheck(auth_cat_name,'2,20','权限名称请在2,20个字符以内','length')) { return false; }
+
+		wintq('正在修改，请稍后...',4,20000,0,'');
+
+		$.ajax({
+			url:"{:url('admin/Authcat/add')}",
+			dataType:'json',
+			type:'POST',
+			data:'module_id='+module_id+'&auth_cat_name='+auth_cat_name,
+			success: function(data) {
+				if (data.code=='200') {
+					wintq('添加成功！',1,1500,0,"{:url('admin/Authcat/add')}");
+				} else {
+					wintq(data.code,3,1500,1,'');
+				}
+			}
+		});
+	});
+});
+</script>
+</head>
+<body>
+<div id="content">
+	<dl id="dl">
+    	 <dt>权限分类</dt> 
+    	  <dd>
+        	<span class="dd_left">模块分类：</span>
+            <span class="dd_right">
+            	<select name="module_id" class="select">
+                	<option value="0">顶级目录</option>
+                    {volist name='module' id='vo'}                   
+                    <option value="{$vo.id}">{$vo.name}</option>              
+                    {/volist}
+                </select><font>* 选择所属目录</font>
+            </span>
+         </dd>        
+         <dd>
+        	<span class="dd_left">权限分类名：</span>
+        	<span class="dd_right"><input type="text" name="auth_cat_name" class="qtext" /><font>* 输入如：用户管理</font></span>
+        </dd>          
+        <dd><input type="button" class="button" value="提 交" /></dd>
+    </dl>
+</div>
+</body>
+</html>

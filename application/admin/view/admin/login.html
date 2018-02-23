@@ -1,0 +1,83 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>登录 - 小峰CRM客户管理系统</title>
+<link rel="stylesheet" type="text/css" href="__CSS__/admin/login.css"  />
+<link rel="stylesheet" type="text/css" href="__CSS__/admin/public.css"  />
+<script type="text/javascript" src="__JS__/jquery.js"></script>
+<script type="text/javascript" src="__JS__/Public.js"></script>
+<script type="text/javascript" src="__JS__/winpop.js"></script>
+<script>
+$(function() {
+	$('#content input').eq(0).focus();
+    $('body input:text, input:password, textarea').focus(function() {
+		$(this).css({'border':'solid 1px #398700','boxShadow':'0px 0px 8px #398700'});
+	});
+    $('body input:text, input:password, textarea').blur(function() {
+		$(this).css({'border':'solid 1px #ccc','boxShadow':'none'});
+	});
+	$('.button').click(function(event) {
+		event.preventDefault();
+		var username=$('#content .utext').val();
+		var password=$('#content .ptext').val();
+		var code=$('#content .code').val();
+		if (!/^[a-zA-Z0-9_-]|[\u4e00-\u9fa5]{2,16}$/.test(username)) {
+			wintq('请输入正确的用户名',2,2000,1,'');
+			$('#content .utext').focus();
+			return;
+		}
+		if (password.length<6) {
+			wintq('请输入6位数以上的密码',2,2000,1,'');
+			$('#content .ptext').focus();
+			return;
+		}
+		if (!/^[a-zA-Z0-9]{3}$/.test(code)) {
+			wintq('请输入正确的验证码',2,2000,1,'');
+			$('#content .code').focus();
+			return;
+		}
+		wintq('正在登录，请稍后...',4,20000,0,'');
+		$.ajax({
+			url:"{:url('admin/admin/login')}",
+			dataType:"json",
+			type:'POST',
+			cache:false,
+			data:'username='+username+'&password='+password+'&captcha='+code,
+			success: function(data) {
+				if (data.code=='200') {
+					wintq('登录成功',1,2000,0,"{:url('admin/index/index')}");
+				}else {	
+				    rcode($(this));				
+					wintq(data.msg,3,4000,1,'');
+				}
+			}
+		});
+	});
+
+	//更换验证码
+	function rcode(obj) {
+		obj.attr('src','{:captcha_src()}');
+	}
+	$('#verify').click(function() {
+		rcode($(this));
+	});
+
+	$('#verify').css('cursor','pointer')
+});
+</script>
+</head>
+<body>
+<div id="content">
+	<form action="{:url('admin/admin/login')}" method="post">
+	<dl>
+    	<dt>通用后台管理系统</dt>
+    	<dd><input type="text" name="username" class="utext" maxlength="12" value="test" /></dd>
+        <dd><input type="password" name="password" class="ptext" maxlength="18" value="123456" /></dd>
+        <dd><input type="text" name="code" class="code" maxlength="4" /> <img src="{:captcha_src()}" border="0" id="verify" width="90" height='38'/><input type="submit" name="login" value="登 录" class="button" /></dd>
+        <dd><label>版本：V 1.0　　设计和维护：<a href="http://www.zhoubin.com" target="_blank">周斌</a></label></dd>
+    </dl>
+    </form>
+</div>
+</body>
+</html>

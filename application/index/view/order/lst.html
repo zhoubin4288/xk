@@ -1,0 +1,35 @@
+{include file='public/header' /}
+     <table>
+     	<tr>
+     		<th>订单id</th>
+     		<th>订单状态status</th>
+     		<th>订单产品goodname</th>
+     		<th>订单时间time</th>
+               <th>操 作</th>
+     	</tr>
+     	{volist name='data' id='vo'}
+     	<tr>
+     		<td>{$vo.id}</td>
+     		
+               {if condition="$vo.status==0"}
+                 <td>未支付</td>
+               {elseif condition="$vo.status==1"}
+                  <td>未收货</td>
+               {else}
+                   <td>交易成功</td>
+               {/if}
+     		<td>{$vo.goodname}</td>
+     		<td>{$vo.time|date="Y-m-d H:i:s",###}</td>
+               <td>
+                    {if condition="$vo.status==0"}
+                      <a href="{:url('Order/orderPay')}?id={$vo.id}">支付</a>
+                    {elseif condition="$vo.status==1"}
+                      <a href="{:url('Order/orderCorm')}?id={$vo.id}">确认收货</a>
+                    {else}
+                       <a href="###" style='color:red;'>交易成功</a>  
+                    {/if}
+               </td>
+     	</tr>
+     	{/volist}
+     </table>
+{include file='public/footer' /}

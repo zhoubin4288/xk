@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>角色添加</title>
+</head>
+<body>
+       <form action="{:url('User/update')}"" method="post">
+       	   <input type="hidden" name="id" value="{$findOne.id}">
+       	  用户名 <input type="text" name="username" value="{$findOne.username}"><br />
+       	  密码 <input type="text" name="password" value="{$findOne.password}"><br />
+       	  角色 <br />
+          {volist name='role' id='vo'}
+       	      <input type="radio" name="role_id" value="{$vo.id}" {if condition='$vo.id==$findOne.role_id'} checked='checked'{/if} >{$vo.role_name}       	      
+       	  {/volist}
+       	  <input type="submit" name="dosubmit">
+       </form>
+</body>
+</html>

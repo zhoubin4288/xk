@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>角色添加</title>
+</head>
+<body>
+       <form action="{:url('User/add')}"" method="post">
+       	  用户名 <input type="text" name="username"><br />
+       	  密码 <input type="text" name="password"><br />
+       	  角色 <br />
+          {volist name='role' id='vo'}
+       	      <input type="radio" name="role_id" value="{$vo.id}">{$vo.role_name}       	      
+       	  {/volist}
+       	  <input type="submit" name="dosubmit">
+       </form>
+</body>
+</html>

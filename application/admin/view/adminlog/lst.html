@@ -1,0 +1,62 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>登入日志记录</title>
+<link rel="stylesheet" type="text/css" href="__CSS__/admin/content.css"  />
+<link rel="stylesheet" type="text/css" href="__CSS__/admin/public.css"  />
+<script type="text/javascript" src="__JS__/jquery.js"></script>
+<script type="text/javascript" src="__JS__/Public.js"></script>
+<script type="text/javascript" src="__JS__/winpop.js"></script>
+<script type="text/javascript" src="__JS__/check.js"></script>
+<script>
+
+</script>
+</head>
+<body>
+<div id="content">
+	<h1>首页 > 用户管理 > 登入日志管理</h1>
+    <h2>
+    	<div class="h2_left">
+        	<a href="{:url('admin/admin_log/lst')}" class="whole">全部</a>
+        	<a href="javascript:;" class="f5" onclick="f5();">刷新</a>
+            <a href="javascript:history.back();" class="Retreat">后退</a>
+            <a href="javascript:history.go(1);" class="Advance">前进</a>
+        </div>
+        <div class="search">
+        	<form action="" method="get">
+        	<input type="text" name="keyword" class="text" value="" />
+            <input type="submit" class="so" value="搜 索" />
+            </form>
+        </div>
+    </h2>
+    <table id="table" border="1" bordercolor="#CCCCCC" cellpadding="0" cellspacing="0">
+    	<tr>
+        	<th>编号</th>
+            <th>登入账号</th>
+            <th>ip</th>
+            <!-- <th>状态</th>-->
+            <th>日期</th>
+        </tr>
+        {if condition="$count eq 0"} <tr class="tr"><td class="tc" colspan="7">暂无数据，等待添加～！</td></tr>{/if}
+        <!--顶级数据-->
+        {volist name="admin_log" id="vo"}
+        <tr class="tr tr2">
+            <td class="tc">{$vo.id}</td>
+            <td class="tc">{$vo.admin}</td> 
+            <td class="tc">{$vo.ip}</td>
+            <td class="tc">{$vo.time|date="Y-m-d H:i:s",###}</td>          
+            <!--<td class="tc">
+            <if condition="$vo.Status eq 0">
+            <img src="__IMAGE__/yes.png" border="0" title="正常" />
+            <else />
+            <img src="__IMAGE__/no.png" border="0" title="锁定" />
+            </if>
+            </td>-->          
+        </tr>       
+        {/volist}
+    </table>
+      {$page}
+</div>
+</body>
+</html>
